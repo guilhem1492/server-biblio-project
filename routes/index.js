@@ -2,11 +2,13 @@ const router = require("express").Router();
 const protectRoute = require("../middlewares/protectRoute");
 
 router.get("/", (req, res, next) => {
-	res.send("Server is running... 🏃‍♂️");
+  res.send("Server is running... 🏃‍♂️");
 });
 
 router.get("/private", protectRoute, (req, res, next) => {
-	res.send("Protection passed !");
+  res.send("Protection passed !");
 });
+
+router.use(require("./search"));
 
 module.exports = router;
