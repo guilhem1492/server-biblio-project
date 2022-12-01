@@ -12,7 +12,7 @@ router.get("/search", async (req, res, next) => {
     console.log(searchQ);
 
     const searchedBook = await Ebook.find(searchQ);
-    res.json(searchedBook);
+    res.status(200).json(searchedBook);
   } catch (error) {
     next(error);
   }
