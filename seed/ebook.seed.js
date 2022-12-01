@@ -28,12 +28,21 @@ async function seedEbooks() {
     total = data.count - data.results.length;
     page++;
 
-    let seed = await Ebook.create(data.results);
+    for (const book of data.results) {
+      const author = book.authors[0] || {};
+      await Ebook.create({ ...book, author });
+    }
+    //let seed = await Ebook.create(data.results);
+    // console.log(data.results);
+
     //console.log(seed);
     for (let i = total; i > 0; i -= data.results.length) {
       data = await (await fetch(`${fetchUrl}&page=${page}`)).json();
-
-      seed = await Ebook.create(data.results);
+      for (const book of data.results) {
+        const author = book.authors[0] || {};
+        await Ebook.create({ ...book, author });
+      }
+      //seed = await Ebook.create(data.results);
       // console.log(seed);
       page++;
     }

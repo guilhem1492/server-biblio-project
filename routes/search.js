@@ -3,13 +3,15 @@ const Ebook = require("../models/Ebook.model");
 
 router.get("/search", async (req, res, next) => {
   try {
-    const { books } = req.query;
+    const { title, author } = req.query;
 
-    const searchQ = new RegExp(books, "gi");
+    const searchQ = title
+      ? { title: new RegExp(title, "gi") }
+      : { "author.name": new RegExp(author, "gi") };
 
-    let searchedBook = [];
+    console.log(searchQ);
 
-    searchedBook = await Ebook.find({ title: searchQ });
+    const searchedBook = await Ebook.find(searchQ);
     res.json(searchedBook);
   } catch (error) {
     next(error);
