@@ -3,13 +3,11 @@ const { Schema, model } = require("mongoose");
 const ebookSchema = new Schema(
   {
     title: String,
-    authors: [
-      {
-        name: String,
-        birth_year: Number,
-        death_year: Number,
-      },
-    ],
+    author: {
+      name: String,
+      birth_year: Number,
+      death_year: Number,
+    },
     subjects: {
       type: [String],
     },
