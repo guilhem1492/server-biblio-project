@@ -4,7 +4,10 @@ const Ebook = require("../models/Ebook.model");
 
 router.get("/", async (req, res, next) => {
   try {
-    const someBooks = await Ebook.find();
+    const booksCount = await Ebook.count();
+    const randomNum = Math.floor(Math.random() * booksCount);
+    console.log(randomNum);
+    const someBooks = await Ebook.find({}, {}, { limit: 30, skip: randomNum });
     const randomBooks = [];
 
     for (let index = 0; index < 6; index++) {
@@ -14,6 +17,7 @@ router.get("/", async (req, res, next) => {
       )[0];
       randomBooks.push(randomBook);
     }
+
     res.status(200).json(randomBooks);
   } catch (error) {
     next(error);
