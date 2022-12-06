@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const isAuthenticated = require("../middlewares/jwt.middleware");
+const protectRoute = require("../middlewares/protectRoute");
 const Ebook = require("../models/Ebook.model");
 const FavEbook = require("../models/FavEbook.model");
 const User = require("../models/User.model");
@@ -129,27 +130,32 @@ router.get("/me/favorites", isAuthenticated, async (req, res, next) => {
   }
 });
 
-router.post("/me/favorites/:id", isAuthenticated, async (req, res, next) => {
-  try {
-    const favBook = req.params.id;
-    const currentUser = await User.findById(req.payload.id);
-    const foundBook = await Ebook.findById(favBook);
-    if (!currentUser || !foundBook) {
-      res.status(404).json({ message: "Livre introuvable !" });
+router.post(
+  "/me/favorites/:id",
+  protectRoute,
+  isAuthenticated,
+  async (req, res, next) => {
+    try {
+      const favBook = req.params.id;
+      const currentUser = await User.findById(req.payload.id);
+      const foundBook = await Ebook.findById(favBook);
+      if (!currentUser || !foundBook) {
+        res.status(404).json({ message: "Livre introuvable !" });
+      }
+
+      await FavEbook.findOneAndUpdate(
+        { ebook: favBook, user: currentUser.id },
+        { ebook: favBook, user: currentUser.id },
+        { upsert: true }
+      );
+
+      res.sendStatus(201);
+    } catch (error) {
+      console.log(error.status);
+      next(error);
     }
-
-    await FavEbook.findOneAndUpdate(
-      { ebook: favBook, user: currentUser.id },
-      { ebook: favBook, user: currentUser.id },
-      { upsert: true }
-    );
-
-    res.sendStatus(201);
-  } catch (error) {
-    console.log(error);
-    next(error);
   }
-});
+);
 
 router.delete("/me/favorites/:id", isAuthenticated, async (req, res, next) => {
   try {
