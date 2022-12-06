@@ -1,22 +1,27 @@
 const router = require("express").Router();
+const getCurrentUser = require("../middlewares/getCurrentUser");
 const isAuthenticated = require("../middlewares/jwt.middleware");
 const Ebook = require("../models/Ebook.model");
 const FavEbook = require("../models/FavEbook.model");
 const User = require("../models/User.model");
 
-router.get("/books/:id", isAuthenticated, async (req, res, next) => {
+router.get("/books/:id", getCurrentUser, async (req, res, next) => {
   try {
     const { id } = req.params;
     const myBook = await Ebook.findById(id);
-    const currentUser = await User.findById(req.payload.id);
-    const favBook = await FavEbook.findOne({
-      ebook: myBook.id,
-      user: currentUser.id,
-    });
+    let favBook = false;
 
-    myBook._doc.isFaved = Boolean(favBook);
+    if (req.currentUser) {
+      favBook = Boolean(
+        await FavEbook.findOne({
+          ebook: myBook.id,
+          user: req.currentUser.id,
+        })
+      );
+    }
 
-    console.log("myBook", myBook);
+    myBook._doc.isFaved = favBook;
+
     res.status(200).json(myBook);
   } catch (error) {
     next(error);
