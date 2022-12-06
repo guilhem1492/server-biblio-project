@@ -9,7 +9,7 @@ const FavEbook = require("../models/FavEbook.model");
 const User = require("../models/User.model");
 const saltRounds = 10;
 
-router.get("/favorites", isAuthenticated, async (req, res, next) => {
+router.get("/", isAuthenticated, async (req, res, next) => {
   try {
     const allFavBooks = await FavEbook.find().populate("ebook");
 
@@ -19,34 +19,29 @@ router.get("/favorites", isAuthenticated, async (req, res, next) => {
   }
 });
 
-router.post(
-  "/favorites/:id",
-  protectRoute,
-  isAuthenticated,
-  async (req, res, next) => {
-    try {
-      const favBook = req.params.id;
-      const currentUser = await User.findById(req.payload.id);
-      const foundBook = await Ebook.findById(favBook);
-      if (!currentUser || !foundBook) {
-        res.status(404).json({ message: "Livre introuvable !" });
-      }
-
-      await FavEbook.findOneAndUpdate(
-        { ebook: favBook, user: currentUser.id },
-        { ebook: favBook, user: currentUser.id },
-        { upsert: true }
-      );
-
-      res.sendStatus(201);
-    } catch (error) {
-      console.log(error.status);
-      next(error);
+router.post("/:id", protectRoute, isAuthenticated, async (req, res, next) => {
+  try {
+    const favBook = req.params.id;
+    const currentUser = await User.findById(req.payload.id);
+    const foundBook = await Ebook.findById(favBook);
+    if (!currentUser || !foundBook) {
+      res.status(404).json({ message: "Livre introuvable !" });
     }
-  }
-);
 
-router.delete("/favorites/:id", isAuthenticated, async (req, res, next) => {
+    await FavEbook.findOneAndUpdate(
+      { ebook: favBook, user: currentUser.id },
+      { ebook: favBook, user: currentUser.id },
+      { upsert: true }
+    );
+
+    res.sendStatus(201);
+  } catch (error) {
+    console.log(error.status);
+    next(error);
+  }
+});
+
+router.delete("/:id", isAuthenticated, async (req, res, next) => {
   try {
     const favBook = req.params.id;
     const currentUser = await User.findById(req.payload.id);

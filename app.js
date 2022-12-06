@@ -21,7 +21,8 @@ app.use(
 
 app.use("/api", require("./routes/index"));
 app.use("/api/auth", require("./routes/auth"));
-app.use("/api/me", require("./routes/favorites"));
+app.use("/api/me/favorites", require("./routes/favorites"));
+app.use("/api/me", require("./routes/editProfile"));
 require("./error-handling/index")(app);
 
 module.exports = app;
