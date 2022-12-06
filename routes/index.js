@@ -10,7 +10,7 @@ router.get("/", async (req, res, next) => {
     const someBooks = await Ebook.find({}, {}, { limit: 30, skip: randomNum });
     const randomBooks = [];
 
-    for (let index = 0; index < 6; index++) {
+    for (let index = 0; index < 8; index++) {
       const randomBook = someBooks.splice(
         Math.floor(Math.random() * someBooks.length),
         1
