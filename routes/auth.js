@@ -18,9 +18,7 @@ const saltRounds = 10;
 router.post("/signup", async (req, res, next) => {
   const { name, email, password } = req.body;
   if (email === "" || name === "" || password === "") {
-    res
-      .status(400)
-      .json({ message: "I need some informations to work with here!" });
+    res.status(400).json({ message: "Plus d'informations sont requises !" });
   }
 
   // ! To use only if you want to enforce strong password (not during dev-time)
@@ -39,9 +37,7 @@ router.post("/signup", async (req, res, next) => {
   try {
     const foundUser = await User.findOne({ email });
     if (foundUser) {
-      res
-        .status(400)
-        .json({ message: "There's another one of you, somewhere." });
+      res.status(400).json({ message: "Cet utilisateur existe déjà !" });
       return;
     }
     const salt = bcrypt.genSaltSync(saltRounds);
@@ -62,21 +58,19 @@ router.post("/signup", async (req, res, next) => {
     if (error instanceof mongoose.Error.ValidationError) {
       return res.status(400).json({ message: error.message });
     }
-    res.status(500).json({ message: "Sweet, sweet 500." });
+    res.status(500).json({ message: "Une erreur s'est produite ! (500)" });
   }
 });
 
 router.post("/signin", async (req, res, next) => {
   const { email, password } = req.body;
   if (email === "" || password === "") {
-    res
-      .status(400)
-      .json({ message: "I need some informations to work with here!" });
+    res.status(400).json({ message: "Plus d'informations sont requises !" });
   }
   try {
     const foundUser = await User.findOne({ email });
     if (!foundUser) {
-      res.status.apply(401).json({ message: "You're not yourself." });
+      res.status.apply(401).json({ message: "Utilisateur introuvable !" });
       return;
     }
     const goodPass = bcrypt.compareSync(password, foundUser.password);
@@ -103,13 +97,11 @@ router.post("/signin", async (req, res, next) => {
 
       res.status(200).json({ authToken });
     } else {
-      res.status(401).json("Can you check your typos ?");
+      res.status(401).json("Mot de passe incorrect !");
     }
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({ message: "Oh noes ! Something went terribly wrong !" });
+    res.status(500).json({ message: "Une erreur s'est produite ! (500)" });
   }
 });
 
