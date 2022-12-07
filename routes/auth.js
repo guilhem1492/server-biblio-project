@@ -16,25 +16,27 @@ const saltRounds = 10;
  */
 
 router.post("/signup", async (req, res, next) => {
-  const { name, email, password } = req.body;
-  if (email === "" || name === "" || password === "") {
-    res.status(400).json({ message: "Plus d'informations sont requises !" });
-  }
-
-  // ! To use only if you want to enforce strong password (not during dev-time)
-
-  // const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
-
-  // if (!regex.test(password)) {
-  // 	return res
-  // 		.status(400)
-  // 		.json({
-  // 			message:
-  // 				"Password needs to have at least 8 chars and must contain at least one number, one lowercase and one uppercase letter.",
-  // 		});
-  // }
-
   try {
+    const { name, email, password } = req.body;
+    if (email === "" || name === "" || password === "") {
+      return res
+        .status(400)
+        .json({ message: "Plus d'informations sont requises !" });
+    }
+
+    // ! To use only if you want to enforce strong password (not during dev-time)
+
+    // const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
+
+    // if (!regex.test(password)) {
+    // 	return res
+    // 		.status(400)
+    // 		.json({
+    // 			message:
+    // 				"Password needs to have at least 8 chars and must contain at least one number, one lowercase and one uppercase letter.",
+    // 		});
+    // }
+
     const foundUser = await User.findOne({ email });
     if (foundUser) {
       res.status(400).json({ message: "Cet utilisateur existe déjà !" });
