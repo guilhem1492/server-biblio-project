@@ -18,7 +18,7 @@ router.patch("/", isAuthenticated, async (req, res, next) => {
       if (password === newPassword) {
         return res
           .status(400)
-          .json({ message: "Choisissez un mot de passe différent" });
+          .json({ message: "Choisissez un mot de passe différent !" });
       }
       const samePassword = await bcrypt.compare(password, currentUser.password);
       if (!samePassword) {
