@@ -72,7 +72,7 @@ router.post("/signin", async (req, res, next) => {
   try {
     const foundUser = await User.findOne({ email });
     if (!foundUser) {
-      res.status.apply(401).json({ message: "Utilisateur introuvable !" });
+      res.status(401).json({ message: "Utilisateur introuvable !" });
       return;
     }
     const goodPass = bcrypt.compareSync(password, foundUser.password);
