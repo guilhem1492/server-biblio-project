@@ -19,7 +19,6 @@ router.get("/books/:id", getCurrentUser, async (req, res, next) => {
         })
       );
     }
-
     myBook._doc.isFaved = favBook;
 
     res.status(200).json(myBook);

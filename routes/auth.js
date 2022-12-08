@@ -67,7 +67,9 @@ router.post("/signup", async (req, res, next) => {
 router.post("/signin", async (req, res, next) => {
   const { email, password } = req.body;
   if (email === "" || password === "") {
-    res.status(400).json({ message: "Plus d'informations sont requises !" });
+    return res
+      .status(400)
+      .json({ message: "Plus d'informations sont requises !" });
   }
   try {
     const foundUser = await User.findOne({ email });
@@ -99,7 +101,7 @@ router.post("/signin", async (req, res, next) => {
 
       res.status(200).json({ authToken });
     } else {
-      res.status(401).json("Mot de passe incorrect !");
+      return res.status(401).json("Mot de passe incorrect !");
     }
   } catch (error) {
     console.log(error);
