@@ -12,6 +12,11 @@ const salt = 10;
 router.patch("/", isAuthenticated, async (req, res, next) => {
   try {
     const { password, newPassword } = req.body;
+    if (password === "" || newPassword === "") {
+      return res
+        .status(400)
+        .json({ message: "Plus d'informations sont requises !" });
+    }
     const currentUser = await User.findById(req.payload.id);
     let hashedPassword;
     if (newPassword) {

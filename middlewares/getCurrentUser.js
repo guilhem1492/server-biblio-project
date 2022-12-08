@@ -3,6 +3,9 @@ const User = require("../models/User.model");
 
 const getCurrentUser = (req, res, next) => {
   const header = req.headers["authorization"];
+  if (!header) {
+    return next();
+  }
   const bearer = header.split(" ");
   const token = bearer[1];
   console.log(token);
