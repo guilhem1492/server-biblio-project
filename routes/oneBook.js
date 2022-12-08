@@ -11,15 +11,15 @@ router.get("/books/:id", getCurrentUser, async (req, res, next) => {
     const myBook = await Ebook.findById(id);
     let favBook = false;
 
-    if (req.currentUser) {
+    if (myBook && req.currentUser) {
       favBook = Boolean(
         await FavEbook.findOne({
           ebook: myBook.id,
           user: req.currentUser.id,
         })
       );
+      myBook._doc.isFaved = favBook;
     }
-    myBook._doc.isFaved = favBook;
 
     res.status(200).json(myBook);
   } catch (error) {
