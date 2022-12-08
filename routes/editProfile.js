@@ -22,7 +22,7 @@ router.patch("/", isAuthenticated, async (req, res, next) => {
       }
       const samePassword = await bcrypt.compare(password, currentUser.password);
       if (!samePassword) {
-        return res.status(400).json({ message: "Mot de passe incorrect" });
+        return res.status(400).json({ message: "Mot de passe incorrect !" });
       }
 
       const generatedSalt = await bcrypt.genSalt(salt);
