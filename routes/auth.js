@@ -101,7 +101,7 @@ router.post("/signin", async (req, res, next) => {
 
       res.status(200).json({ authToken });
     } else {
-      return res.status(401).json("Mot de passe incorrect !");
+      return res.status(401).json({ message: "Mot de passe incorrect !" });
     }
   } catch (error) {
     console.log(error);
