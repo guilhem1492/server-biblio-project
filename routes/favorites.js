@@ -11,7 +11,9 @@ const saltRounds = 10;
 
 router.get("/", isAuthenticated, async (req, res, next) => {
   try {
-    const allFavBooks = await FavEbook.find().populate("ebook");
+    const allFavBooks = await FavEbook.find({ user: req.payload.id }).populate(
+      "ebook"
+    );
 
     res.status(200).json(allFavBooks);
   } catch (error) {
